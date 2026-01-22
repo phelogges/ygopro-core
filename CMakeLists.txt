@@ -1,18 +1,12 @@
 project (ocgcore)
 
-set (AUTO_FILES_RESULT)
-AutoFiles("." "src" "\\.(cpp|c|h)$")
+file(GLOB SRC_FILES "*.h" "*.cpp")
 
-if (MSVC)
-    include_directories ( ../lua )
-else ()
-    include_directories ( ${LUA_INCLUDE_DIR} )
-endif ()
+add_library (${PROJECT_NAME} STATIC ${SRC_FILES})
 
-add_library (ocgcore STATIC ${AUTO_FILES_RESULT})
+target_include_directories(${PROJECT_NAME} PRIVATE ${LUA_INCLUDE_DIR})
 
-if (MSVC)
-    target_link_libraries (ocgcore lua)
-else ()
-    target_link_libraries (ocgcore ${LUA_LIBRARIES})
-endif ()
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LUA_LIBRARIES})
+
+# Expose public include directory
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
